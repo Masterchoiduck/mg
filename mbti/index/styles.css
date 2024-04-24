@@ -6,6 +6,7 @@
   }
 
 body, html {
+    background-color: black;
     margin: 0;
     padding: 0;
     height: 100%;
@@ -18,6 +19,11 @@ body, html {
     flex-direction: column; /* 모바일은 세로로 정렬 */
     align-items: center; /* 가운데 정렬 */
     height: 100%;
+    margin: 0% 10% 10% 10%;
+}
+
+.container > *{
+    flex: 1;
 }
 
 .character-image {
@@ -26,17 +32,19 @@ body, html {
 }
 
 .character-image img {
-    /* width: 100%; */
+    width: 100%;
     height: auto;
     display: block; /* 이미지가 올바르게 표시되도록 */
+    height: calc(100vh - 20px); /* 브라우저 창의 높이를 꽉 채우도록 계산 */
+    object-fit: cover;
 }
 
 .message-bubble {
     position: absolute; /* 이미지 위에 오도록 절대 위치 설정 */
     bottom: 20%; /* 이미지 하단으로부터의 위치 */
     background-color: #ff6464;
-    width: 90%; /* 가로 너비 설정 */
-    max-width: 300px; /* 최대 너비 설정 */
+    width: 70%; /* 가로 너비 설정 */
+    
     border-radius: 20px;
     padding: 20px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
@@ -84,6 +92,11 @@ body, html {
 }
 
 @media (min-width: 768px) {
+
+    .character-image img{
+        width: auto;
+    }
+
     .container {
         flex-direction: row; /* 데스크탑은 가로 정렬 */
     }
@@ -116,20 +129,13 @@ body, html {
         position: relative; /* 메시지 버블이 겹치기 위해 */
     }
 
-    .character-image img {
-        /* width: 100%;  */
-        /* 이미지가 컨테이너 너비를 꽉 채우도록 */
-        height: calc(100vh - 20px); /* 브라우저 창의 높이를 꽉 채우도록 계산 */
-        object-fit: cover; /* 이미지 비율을 유지하면서 꽉 차게 */
-    }
 
     .message-bubble {
         position: absolute; /* 이미지 위에 오도록 절대 위치 설정 */
         bottom: 20%; /* 이미지 하단으로부터의 위치 */
-        right: 10%; /* 오른쪽 정렬 */
-        max-width: 300px; /* 최대 너비 설정 */
+        right: 5%; /* 오른쪽 정렬 */
+        
         margin-left: 0; /* 이전 설정 초기화 */
-        transform: translateX(50%); /* 메시지 버블을 오른쪽으로 밀어줍니다 */
     }
 
     .profile-pic img {
