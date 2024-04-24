@@ -16,8 +16,8 @@
 
 .profile-name {
     text-align: center;
-    font-size: 2em; /* 이름 글자 크기 조정 */
-    margin-top: 5px;
+    font-size: 1.5em; /* 이름 글자 크기 조정 */
+    margin-top: 0px;
     color: #fff;
 }
 
@@ -41,7 +41,6 @@ body, html {
     flex-direction: column; /* 모바일은 세로로 정렬 */
     align-items: center; /* 가운데 정렬 */
     height: 100%;
-    margin: 0% 10% 10% 10%;
 }
 
 .container > *{
@@ -74,9 +73,9 @@ body, html {
 }
 
 .profile-pic img {
-    width: 86px; /* 크기 조정 */
+    width: 56px; /* 크기 조정 */
     height: auto;
-    border-radius: 30%;
+    border-radius: 25%;
     /* position: absolute; */
     /* left: 10%; */
     /* transform: translateX(-50%); 중앙정렬*/
@@ -103,7 +102,7 @@ body, html {
     margin-top: -5%;
     position: relative; /* 부모 요소에 상대적인 위치 지정 */
     z-index: 2;
-    font-size: 2.3em;
+    font-size: 1.3em;
     height: 100%;
     font-weight: bold;
 }
@@ -115,23 +114,65 @@ body, html {
     border-width: 15px;
     border-style: solid;
     border-color: #ffff transparent transparent #ffff;
-    bottom: 4px;
-    left: 0%;
+    bottom: -6px;
+    left: 5%;
     transform: translateX(-50%) rotate(45deg);
 }
 
 
 .reply {
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 2.3em;
+    font-size: 1.3em;
 }
 
-.reply:hover {
-    background-color: #fdd;
-}
 
 @media (min-width: 768px) {
+
+    .profile-name {
+        text-align: center;
+        font-size: 2em; /* 이름 글자 크기 조정 */
+        margin-top: 5px;
+        color: #fff;
+    }
+
+    .profile-pic img {
+        width: 86px; /* 크기 조정 */
+        height: auto;
+        border-radius: 30%;
+        /* position: absolute; */
+        /* left: 10%; */
+        /* transform: translateX(-50%); 중앙정렬*/
+    }
+
+    .reply {
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 2.3em;
+    }
+    
+    .reply:hover {
+        background-color: #fdd;
+    }
+
+    .question {
+        margin-top: -5%;
+        position: relative; /* 부모 요소에 상대적인 위치 지정 */
+        z-index: 2;
+        font-size: 2.3em;
+        height: 100%;
+        font-weight: bold;
+    }
+    
+    .question::after {
+        z-index: -1;
+        content: '';
+        position: absolute;
+        border-width: 15px;
+        border-style: solid;
+        border-color: #ffff transparent transparent #ffff;
+        bottom: 4px;
+        left: 0%;
+        transform: translateX(-50%) rotate(45deg);
+    }
 
     .character-image img{
         width: auto;
@@ -139,6 +180,11 @@ body, html {
 
     .container {
         flex-direction: row; /* 데스크탑은 가로 정렬 */
+        display: flex;
+        flex-direction: column; /* 모바일은 세로로 정렬 */
+        align-items: center; /* 가운데 정렬 */
+        height: 100%;
+        margin: 0% 10% 0% 10%;
     }
 
     .character-image {
