@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mbti게임</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+      <div class="character-image">
+          <!-- 캐릭터 이미지를 여기에 삽입합니다. -->
+          <img src="./사진/은지/예시3.png" alt="캐릭터">
+      </div>
+      <div class="message-bubble">
+        <div class="texts">
+          <div class="profile-pic">
+              <img src="./사진/은지/은지 프로필.png" alt="프로필 사진">
+          </div>
+          <p class="question">뭐하고 놀까?</p>
+          <div class="reply">카페에 가자!</div>
+          <div class="reply">놀이공원에 가자!</div>
+          <div class="reply">룸카페에 가자!</div>
+          <div class="reply">집에서 놀자!</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyDRT0YsgdSXxoDkxdy6twVpPI26Mll-dG8",
+          authDomain: "mbti-game-af992.firebaseapp.com",
+          projectId: "mbti-game-af992",
+          storageBucket: "mbti-game-af992.appspot.com",
+          messagingSenderId: "444225609862",
+          appId: "1:444225609862:web:5857859ccf18d2a7527107",
+          measurementId: "G-EGHH7H303X"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+      </script>
+
+</body>
+</html>

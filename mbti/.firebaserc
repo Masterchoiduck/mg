@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "mbti-game-af992": "mbti-game-af992",
+    "default": "mbti-game-af992"
+  },
+  "targets": {
+    "mbti-game-af992": {
+      "hosting": {
+        "mbtigame": [
+          "https://mbtigame.firebaseapp.com/"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

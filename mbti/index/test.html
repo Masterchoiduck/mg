@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대화 인터페이스</title>
+    <style>
+        /* styles.css */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: '나눔고딕', Arial, sans-serif;
+    background-color: #ff6464; /* 배경색 설정 */
+}
+
+.chat-container {
+    max-width: 400px; /* 대화창 최대 너비 */
+    margin: auto;
+    padding: 50px 20px; /* 상단 공간과 좌우 여백 설정 */
+    box-sizing: border-box;
+}
+
+.message-bubble {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    display: inline-block; /* 내용에 맞춰 너비가 결정되도록 */
+    position: relative;
+    max-width: 100%; /* 너비 제한 */
+}
+
+.question {
+    margin-left: 60px; /* 프로필 사진 자리를 비워둡니다 */
+}
+
+.answer {
+    text-align: right;
+}
+
+.profile-section {
+    position: absolute;
+    top: -10px;
+    left: -70px; /* 프로필 섹션을 메시지 말풍선 왼쪽 바깥에 위치하도록 */
+}
+
+.profile-pic img {
+    width: 40px; /* 프로필 이미지 크기 */
+    height: 40px;
+    border-radius: 50%;
+}
+
+.profile-name {
+    text-align: center;
+    font-size: 0.8em; /* 이름 글자 크기 조정 */
+    margin-top: 5px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="message-bubble question">
+            <div class="profile-section">
+                <div class="profile-pic">
+                    <img src="./사진/은지/은지 프로필.png" alt="프로필 사진">
+                </div>
+                <div class="profile-name">은지</div>
+            </div>
+            무슨 하고 잘 거?
+        </div>
+        <div class="message-bubble answer">커피에에 가자!</div>
+        <div class="message-bubble answer">좋은 공원에 가자</div>
+        <div class="message-bubble answer">춤바다에 가자</div>
+        <div class="message-bubble answer">집에서 즐겨</div>
+    </div>
+</body>
+</html>

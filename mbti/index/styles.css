@@ -1,0 +1,142 @@
+/* styles.css */
+.nanum-pen-script-regular {
+    font-family: "Nanum Pen Script", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Nanum Pen Script'
+}
+
+
+.container {
+    display: flex;
+    flex-direction: column; /* 모바일은 세로로 정렬 */
+    align-items: center; /* 가운데 정렬 */
+    height: 100%;
+}
+
+.character-image {
+    position: relative; /* 메시지 버블이 겹치기 위해 */
+    width: 100%; /* 이미지가 전체 너비를 차지하도록 */
+}
+
+.character-image img {
+    width: 100%;
+    height: auto;
+    display: block; /* 이미지가 올바르게 표시되도록 */
+}
+
+.message-bubble {
+    position: absolute; /* 이미지 위에 오도록 절대 위치 설정 */
+    bottom: 20%; /* 이미지 하단으로부터의 위치 */
+    background-color: #ff6464;
+    width: 90%; /* 가로 너비 설정 */
+    max-width: 300px; /* 최대 너비 설정 */
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+.profile-pic img {
+    width: 40px; /* 크기 조정 */
+    height: auto;
+    border-radius: 50%;
+    position: absolute;
+    top: -20px; /* 버블 위로 */
+    left: 50%;
+    transform: translateX(-50%); /* 중앙 정렬을 위해 */
+}
+
+.texts {
+    margin-top: 20px; /* 프로필 사진 위로 공간 확보 */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.question, .reply {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: inline-block; 
+    position: relative;
+    width: fit-content;
+}
+
+.question {
+    font-weight: bold;
+}
+
+.reply {
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reply:hover {
+    background-color: #fdd;
+}
+
+@media (min-width: 768px) {
+    .container {
+        flex-direction: row; /* 데스크탑은 가로 정렬 */
+    }
+
+    .character-image {
+        width: 50%;
+    }
+
+    .message-bubble {
+        position: relative; /* 기본 위치로 */
+        bottom: auto; /* 위치 재설정 */
+        width: 50%;
+        margin-left: -150px; /* 겹치도록 위치 조정 */
+    }
+
+    .profile-pic img {
+        top: 10px;
+        left: 10px;
+        transform: translateX(0); /* 이미지 왼쪽 상단 정렬 */
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        flex-direction: row; /* 데스크탑은 가로 정렬 */
+        align-items: flex-start; /* 상단 정렬 */
+    }
+
+    .character-image {
+        flex: 1; /* 캐릭터 이미지가 가능한 많은 공간을 차지하도록 */
+        position: relative; /* 메시지 버블이 겹치기 위해 */
+    }
+
+    .character-image img {
+        width: 100%; /* 이미지가 컨테이너 너비를 꽉 채우도록 */
+        height: calc(100vh - 20px); /* 브라우저 창의 높이를 꽉 채우도록 계산 */
+        object-fit: cover; /* 이미지 비율을 유지하면서 꽉 차게 */
+    }
+
+    .message-bubble {
+        position: absolute; /* 이미지 위에 오도록 절대 위치 설정 */
+        bottom: 20%; /* 이미지 하단으로부터의 위치 */
+        right: 10%; /* 오른쪽 정렬 */
+        max-width: 300px; /* 최대 너비 설정 */
+        margin-left: 0; /* 이전 설정 초기화 */
+        transform: translateX(50%); /* 메시지 버블을 오른쪽으로 밀어줍니다 */
+    }
+
+    .profile-pic img {
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%); /* 중앙 정렬을 위해 */
+    }
+
+    /* 나머지 스타일은 그대로 유지합니다. */
+}
