@@ -26,7 +26,7 @@ body, html {
 }
 
 .character-image img {
-    width: 100%;
+    /* width: 100%; */
     height: auto;
     display: block; /* 이미지가 올바르게 표시되도록 */
 }
@@ -89,7 +89,7 @@ body, html {
     }
 
     .character-image {
-        width: 50%;
+        /* width: 50%; */
     }
 
     .message-bubble {
@@ -113,12 +113,12 @@ body, html {
     }
 
     .character-image {
-        flex: 1; /* 캐릭터 이미지가 가능한 많은 공간을 차지하도록 */
         position: relative; /* 메시지 버블이 겹치기 위해 */
     }
 
     .character-image img {
-        width: 100%; /* 이미지가 컨테이너 너비를 꽉 채우도록 */
+        /* width: 100%;  */
+        /* 이미지가 컨테이너 너비를 꽉 채우도록 */
         height: calc(100vh - 20px); /* 브라우저 창의 높이를 꽉 채우도록 계산 */
         object-fit: cover; /* 이미지 비율을 유지하면서 꽉 차게 */
     }
