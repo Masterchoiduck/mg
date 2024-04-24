@@ -62,8 +62,9 @@ body, html {
 
 .message-bubble {
     position: absolute; /* 이미지 위에 오도록 절대 위치 설정 */
-    bottom: 20%; /* 이미지 하단으로부터의 위치 */
-    background-color: #ff6464;
+    /* bottom: 20%; 이미지 하단으로부터의 위치 */
+    bottom: 5%;
+    background-color: rgba(255, 100, 100, 0.7);
     width: 70%; /* 가로 너비 설정 */
     
     border-radius: 20px;
@@ -192,6 +193,7 @@ body, html {
     }
 
     .message-bubble {
+        background-color: #ff6464;
         position: relative; /* 기본 위치로 */
         bottom: auto; /* 위치 재설정 */
         width: 50%;
