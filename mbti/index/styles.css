@@ -283,13 +283,12 @@ body, html {
     }
 
     /* 768~1631 */
-@media (min-width: 768px) and (max-width: 1410px) {
-    .message-bubble {
-        position: absolute; /* 이미지 위에 오도록 절대 위치 설정 */
-        bottom: 20%; /* 이미지 하단으로부터의 위치 */
-        right: 1%; /* 오른쪽 정렬 */
-        margin-left: 0; /* 이전 설정 초기화 */
+    @media (min-width: 768px) and (max-width: 1631px) {
+        .message-bubble {
+            bottom: 10%; /* 이미지 하단으로부터의 위치를 조금 더 높게 조정 */
+            right: 10%; /* 오른쪽 간격을 더 줄임 */
+        }
+    
     }
-}
 
 /* 나머지 스타일은 그대로 유지합니다. */
