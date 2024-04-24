@@ -2,7 +2,10 @@
 
 .npc {
     display: flex;
-    gap: 15px;
+    gap: 35px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 
 .player {
@@ -71,9 +74,9 @@ body, html {
 }
 
 .profile-pic img {
-    width: 40px; /* 크기 조정 */
+    width: 86px; /* 크기 조정 */
     height: auto;
-    border-radius: 50%;
+    border-radius: 30%;
     /* position: absolute; */
     /* left: 10%; */
     /* transform: translateX(-50%); 중앙정렬*/
@@ -97,9 +100,9 @@ body, html {
 }
 
 .question {
+    margin-top: -5%;
     position: relative; /* 부모 요소에 상대적인 위치 지정 */
     z-index: 2;
-    margin: 0;
     font-size: 2.3em;
     height: 100%;
     font-weight: bold;
@@ -111,7 +114,7 @@ body, html {
     position: absolute;
     border-width: 15px;
     border-style: solid;
-    border-color: #ffffff00 transparent transparent #f1f0f0;
+    border-color: #ffff transparent transparent #ffff;
     bottom: 4px;
     left: 0%;
     transform: translateX(-50%) rotate(45deg);
