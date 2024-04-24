@@ -1,4 +1,23 @@
 /* styles.css */
+
+.npc {
+    display: flex;
+    gap: 15px;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.profile-name {
+    text-align: center;
+    font-size: 0.8em; /* 이름 글자 크기 조정 */
+    margin-top: 5px;
+    color: #fff;
+}
+
 .nanum-pen-script-regular {
     font-family: "Nanum Pen Script", cursive;
     font-weight: 400;
@@ -55,10 +74,9 @@ body, html {
     width: 40px; /* 크기 조정 */
     height: auto;
     border-radius: 50%;
-    position: absolute;
-    top: -20px; /* 버블 위로 */
-    left: 50%;
-    transform: translateX(-50%); /* 중앙 정렬을 위해 */
+    /* position: absolute; */
+    /* left: 10%; */
+    /* transform: translateX(-50%); 중앙정렬*/
 }
 
 .texts {
@@ -113,9 +131,9 @@ body, html {
     }
 
     .profile-pic img {
-        top: 10px;
-        left: 10px;
-        transform: translateX(0); /* 이미지 왼쪽 상단 정렬 */
+        /* top: 10px; */
+        /* left: 10px; */
+        /* transform: translateX(0); 이미지 왼쪽 상단 정렬 */
     }
 }
 
@@ -139,9 +157,9 @@ body, html {
     }
 
     .profile-pic img {
-        top: -20px;
-        left: 50%;
-        transform: translateX(-50%); /* 중앙 정렬을 위해 */
+        /* top: -20px; */
+        /* left: 50%; */
+        /* transform: translateX(-50%); 중앙 정렬을 위해 */
     }
 
     /* 나머지 스타일은 그대로 유지합니다. */
