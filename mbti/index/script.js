@@ -17,9 +17,19 @@ document.getElementById('closeModal1').addEventListener('click', function () {
 
 
 // 모달 외부 클릭 시 모달을 닫음
+
+// PC
 window.addEventListener('click', function (event) {
     var modal = document.getElementById('myModal1');
     if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+});
+
+// 모바일
+window.addEventListener('touchstart', function(event) {
+    var modal = document.getElementById('myModal1');
+    if (event.target === modal) {
         modal.style.display = 'none';
     }
 });
