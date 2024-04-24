@@ -13,7 +13,7 @@
 
 .profile-name {
     text-align: center;
-    font-size: 0.8em; /* 이름 글자 크기 조정 */
+    font-size: 2em; /* 이름 글자 크기 조정 */
     margin-top: 5px;
     color: #fff;
 }
@@ -97,12 +97,31 @@ body, html {
 }
 
 .question {
+    position: relative; /* 부모 요소에 상대적인 위치 지정 */
+    z-index: 2;
+    margin: 0;
+    font-size: 2.3em;
+    height: 100%;
     font-weight: bold;
 }
+
+.question::after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    border-width: 15px;
+    border-style: solid;
+    border-color: #ffffff00 transparent transparent #f1f0f0;
+    bottom: 4px;
+    left: 0%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
 
 .reply {
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 2.3em;
 }
 
 .reply:hover {

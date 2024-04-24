@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Bubbles</title>
+<style>
+  .chat-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .bubble {
+  position: relative;
+  background-color: #f1f0f0;
+  border-radius: 16px;
+  padding: 10px;
+  margin: 10px 0;
+  display: inline-block;
+  max-width: 80%;
+}
+
+.bubble::after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    border-width: 15px;
+    border-style: solid;
+    border-color: #f1f0f0 transparent transparent #f1f0f0;
+    bottom: -3px;
+    left: -10px;
+    transform: rotate(45deg);
+}
+
+
+  /* Right-aligned bubbles */
+  .bubble.right {
+    float: right;
+    background-color: #a0e75a;
+  }
+
+  /* Left-aligned bubbles */
+  .bubble.left {
+    float: left;
+    background-color: #f1f0f0;
+  }
+
+  /* Clear floats */
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+</style>
+</head>
+<body>
+
+<div class="chat-container clearfix">
+  <div class="bubble left">안녕!</div>
+  <div class="bubble right">카페에서 만나!</div>
+  <div class="bubble left">좋은 음악에 만나!</div>
+  <!-- Add more bubbles here -->
+</div>
+
+<script>
+  // JavaScript can be used to dynamically add or modify bubbles if needed.
+</script>
+
+</body>
+</html>
