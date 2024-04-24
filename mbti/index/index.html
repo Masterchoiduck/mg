@@ -7,9 +7,14 @@
     <link rel="stylesheet" href="styles.css">
 
     <!-- 폰트 -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- 나눔손글씨펜 -->
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+
+    <!-- 나눔고딕 -->
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -20,14 +25,14 @@
       <div class="message-bubble">
         <div class="texts">
           <div class="npc">
+            <p class="question">뭐하고 놀까?</p>
             <div class="profile-pic">
                 <img src="./사진/은지/은지 프로필.png" alt="프로필 사진">
-                <div class="profile-name">은지</div>
+                <div class="profile-name">지현</div>
             </div>
-            <p class="question">뭐하고 놀까?</p>
           </div>
           <div class="player">
-            <div class="reply">카페에 가자!</div>
+            <div class="reply">카페에 가자!카페에 가자!카페에 가자!카페에 가자!카페에 가자!카페에 가자!</div>
             <div class="reply">놀이공원에 가자!</div>
             <div class="reply">룸카페에 가자!</div>
             <div class="reply">집에서 놀자!</div>
@@ -35,6 +40,23 @@
         </div>
       </div>
     </div>
+
+    <!-- 모달창 -->
+    <div id="myModal1" class="modal">
+      <div class="modal-content">
+          <span id="closeModal1" style="cursor: pointer; float: right;">&times;</span>
+          <div id="initialForm">
+              <div for="organization">파일 송수신 데이터 입력</div>
+
+              <textarea id="textInput" rows="4" cols="50" placeholder="데이터를 입력해주세요" "></textarea>
+              <br>
+              <div style="display: flex; justify-content: center;">
+                  <button id="textdataBtn1">입력</button>
+                  <button id="textdataBtn1_C">초기화</button>
+              </div>
+          </div>
+      </div>
+  </div>
 
     <script src="script.js"></script>
 

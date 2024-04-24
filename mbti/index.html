@@ -1,0 +1,2125 @@
+         <!DOCTYPE html>
+         <html lang="en">
+         <head>
+             <meta charset="UTF-8">
+             <meta http-equiv="X-UA-Compatible" content="IE=edge">
+             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+             <style>
+                 body {
+                     font-family: Arial, sans-serif;
+                     margin: 0;
+                     padding: 0;
+                 }
+         
+                 header {
+                     background-color: #3498db;
+                     padding: 10px;
+                     text-align: center;
+                 }
+         
+                 button {
+                     background-color: #2ecc71;
+                     color: #fff;
+                     padding: 10px 20px;
+                     font-size: 16px;
+                     margin: 10px;
+                     border: none;
+                     cursor: pointer;
+                 }
+         
+                 table {
+                     width: 100%;
+                     border-collapse: collapse;
+                     margin-top: 20px;
+                    }
+                    
+                    th, td {
+                     border: 1px solid #ddd;
+                     padding: 8px;
+                     text-align: left;
+                    }
+                    
+                    th {
+                        background-color: #3498db;
+                        color: #fff;
+                    }
+                
+                    
+                    /* 모달 */
+                    
+                    .modal {
+                        display: none;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 1;
+                    }
+                    
+                    .modal-content {
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 5px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    }
+             </style>
+             <title>파일송수신</title>
+            </head>
+            <body>
+             <!-- 모달창 -->
+             <div id="myModal1" class="modal">
+                 <div class="modal-content">
+                     <span id="closeModal1" style="cursor: pointer; float: right;">&times;</span>
+                     <div id="initialForm">
+                         <div for="organization">파일 송수신 데이터 입력</div>
+         
+                         <textarea id="textInput" rows="4" cols="50" placeholder="데이터를 입력해주세요" "></textarea>
+                         <br>
+                         <div style="display: flex; justify-content: center;">
+                             <button id="textdataBtn1">입력</button>
+                             <button id="textdataBtn1_C">초기화</button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         
+         
+             <div style="display: flex; justify-content: center;">
+                 <button id="inputBtn1" style="background-color: rgba(255, 0, 0, 0.452); color: black; font-size: larger;">파일 송수신 데이터 입력</button>
+             </div>
+             <header>
+                 <h1 id="headerh1">미완성입니다...😊 추가하면 좋겠다는거 있으면 말해주세영</h1>
+                 <div>파일 전송시간 확인</div>
+                 <button id="entireTable">전체</button>
+                 <button>정상수신 파일</button>
+                 <button>늦게 들어온 파일</button>
+                 <button>오류 / 미수신 파일</button>
+                 <!-- 추가 버튼을 필요한 만큼 추가할 수 있습니다. -->
+                
+                 <div>카드사별 자료 전송일지</div>
+                 <button id="EIDTableBtn">EDI 매입청구 자료 전송</button>
+                 <button id="DDCTableBtn">DDC/DESC 매입청구 자료 전송</button>
+                 <button id="C2TableBtn">2차 하위사업자 자료 전송</button>
+                 <button id="CTableBtn">차액정산 자료 전송</button>
+         
+                 <div>직불, 거래내역, 가맹점개시/해지, 해외카드 전송</div>
+                 <button id="JJTableBtn">직불 및 거래내역 전송</button>
+                 <button id="CheekTableBtn">DDC개시/해지 전송 / 해외카드 / BL 확인</button>
+             </header>
+             <div id="tableContainer">
+                 <h1 id="currentDateTime"></h1>
+             </div>
+             <script>
+                
+                 // 모달을 보이도록 설정
+                 document.getElementById('inputBtn1').addEventListener('click', function () {
+                     document.getElementById('myModal1').style.display = 'flex';
+                 });
+         
+                 // 닫기 버튼 클릭 시 모달을 닫음
+                 document.getElementById('closeModal1').addEventListener('click', function () {
+                     document.getElementById('myModal1').style.display = 'none';
+                 });
+         
+         
+                 // 모달 외부 클릭 시 모달을 닫음
+                 window.addEventListener('click', function (event) {
+                     var modal = document.getElementById('myModal1');
+                     if (event.target == modal) {
+                         modal.style.display = 'none';
+                     }
+                 });
+
+                
+         
+                 // 날자 시간 요일 알려주는 코드
+                 const currentDateTimeElement = document.getElementById('currentDateTime');
+                 const now = new Date();
+                 const year = now.getFullYear();
+                 const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                 const day = now.getDate().toString().padStart(2, '0');
+                 const hours = now.getHours().toString().padStart(2, '0');
+                 const minutes = now.getMinutes().toString().padStart(2, '0');
+                 const getday = now.getDay()
+         
+                 const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+                 const dayOfWeek = daysOfWeek[now.getDay()];
+                
+                 const dateTimeString = `${year}-${month}-${day} ${hours}:${minutes} ${dayOfWeek}`;
+                 //시간만 알려주는거
+                 const hoursMinutes = `${hours}:${minutes}`
+                 currentDateTimeElement.innerText = dateTimeString;
+                 // console.log(dateTimeString);
+                
+
+                 // 파일 송수신 데이터 가져움
+                 document.getElementById('textdataBtn1').addEventListener('click',e=>{
+                     document.getElementById('myModal1').style.display = 'none';
+                     const inputText = document.getElementById('textInput').value
+                     // console.log(inputText);
+                    
+         
+         
+         
+                    
+                     // 파일 송수신 데이터 초기화
+                     document.getElementById('textdataBtn1_C').addEventListener('click',function (){
+                         document.getElementById('textInput').value = ''
+                     })
+                        
+                    
+                     const rows = inputText.trim().split('\n');
+                     var newrow = []
+                     rows.forEach(element => {
+                         if (element.length!==0) {
+                             newrow.push(element)
+                         }
+                     });
+
+
+                     const result = [];
+                     const alrresult = [];
+                     const Error11 = [];
+                     var aa = []
+         
+         
+                 for (let i = 1; i < newrow.length; i++) {
+                     const values = newrow[i].split(/\s{2,}/).filter(element => element.length !== 0);
+                     const obj = {
+                         "기관": values[0],
+                         "수신": values[1],
+                         "파일tPay코드": values[2],
+                         "파일업무명": values[3],
+                         "파일코드": values[4],
+                         "파일경로": values[5],
+                         "작업일자": values[6],
+                         "시작시간": values[7],
+                         "완료시간": values[8],
+                         "작업파일명": values[9],
+                         "파일크기": values[10],
+                         "작업결과": values[11]
+                     };
+            
+                     // 결과 배열에 추가
+         
+                     result.push(obj);  
+                     // console.log(obj.파일코드);
+                     aa += `${obj.기관}     ${obj.파일tPay코드}     ${obj.파일코드}     ${obj.작업일자}     ${obj.시작시간}     ${obj.완료시간}\n`
+                     // aa += `${obj.파일tPay코드}\n`
+                    
+                     // 작업결과 0000아닌거 체크
+                     if (obj.작업결과!=='0000'){
+                         // console.log(obj);
+                     }
+                     // 파일 안들어온거 확인
+                     if (values.length<12) {
+                         alrresult.push(obj);
+                     }
+                     // console.log(obj);
+                 }
+         
+         
+                //  전체 테이블 생성
+                 document.getElementById('entireTable').addEventListener('click', entirecreateTable);
+                     function entirecreateTable() {
+                         // 테이블 데이터
+                         // 테이블 요소 생성
+                         const table = document.createElement('table');
+                         table.border = "1";
+         
+                         // 테이블 헤더 생성
+                         const thead = document.createElement('thead');
+                         const headerRow = document.createElement('tr');
+         
+                         for (let j = 0; j < EDIData[0].length; j++) {
+                             const th = document.createElement('th');
+                             th.textContent = EDIData[0][j];
+                             headerRow.appendChild(th);
+                         }
+         
+                         thead.appendChild(headerRow);
+                         table.appendChild(thead);
+         
+                         // 테이블 본문 생성
+                         const tbody = document.createElement('tbody');
+         
+                         for (let i = 1; i < EDIData.length; i++) {
+                             const row = document.createElement('tr');
+         
+                             for (let j = 0; j < EDIData[i].length; j++) {
+                                 const cell = document.createElement('td');
+                                 cell.textContent = EDIData[i][j];
+                                 row.appendChild(cell);
+                             }
+         
+                             tbody.appendChild(row);
+                         }
+         
+                         table.appendChild(tbody);
+         
+                         // 생성한 테이블을 화면에 추가
+                         const tableContainer = document.getElementById('tableContainer');
+                         tableContainer.innerHTML = '';
+                         tableContainer.appendChild(table);
+                     }
+         
+         
+                 // 데드라인 비교 함수
+                 function deadtime(params) {
+                    
+                 }
+         
+         
+                 // 에러 코드 함수
+                 function alrcode(params) {
+                     switch (params) {
+                         case '000':
+                             return '미확인 에러';
+                         case '0':
+                             return '전날이 휴일이면 미수신';
+                         case '1':
+                             return '토,일 미송신, 수신';
+                         case '2':
+                             return '일요일 미수신';
+                         case '3':
+                             return '매월 초에 1번 송신';
+                         case '4':
+                             return '상반기, 하반기 전송';
+                         case '5':
+                             return '월배치';
+                         case '6':
+                             return '대행 승인시 수동으로 전송';
+                         case '7':
+                             return '매주 월요일 수신';
+                         case '8':
+                             return '1일, 15일 수신(공유일시 익일 수신)';
+                         case '9':
+                             return '매월 10일 전송,수신';
+                         case '10':
+                             return '휴일 상관없이 월~금 수신';
+                         case '11':
+                             return '마지막 주 월요일 전송';
+                         case '12':
+                             return '변경 정보 없을 시 미수신';
+                         case '999':
+                             return '365일 전송';
+                         default:
+                             return '이상함';
+                     }
+                 }
+         
+                
+                 // EDI 매입청구 자료 전송
+                 const EDIData = [["카드사명", "데드라인", "송신시간", "완료시간", "파일크기", "비고"]]
+                 var EDInub = 1
+                 for (let index = 0; index <= 30; index++) {
+                     result.forEach(element => {
+                            
+                         // 비씨(0100, F128)
+                         if (EDInub ===1) {
+                             if (element.파일tPay코드==='0100SPEDIF128') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("13:30")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송 - bc_gator 전송 확인")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         // 비씨(단일입금, F127)
+                         if (EDInub ===2) {
+                             if (element.파일tPay코드==='0100SPEDIF127') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("13:30")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송 - bc_gator 전송 확인")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         // 비씨(국제EDI, F124)
+                         if (EDInub === 3) {
+                             if (element.파일tPay코드==='0100SPEDIF124') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("13:30")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("bc_gatorvossend.cm")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //우리(0110, ED55)
+                         if (EDInub === 4) {
+                             if (element.파일tPay코드==='0110SPEDIED55') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("17:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //국민(0200, ED00)
+                         if (EDInub === 5) {
+                             if (element.파일tPay코드==='0200SPEDIED00') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("17:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //국민(은련UPUP, UP00)
+                         if (EDInub === 6) {
+                             if (element.파일tPay코드==='0200SPFORUP00') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("17:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //농협(0201, ED0011)
+                         if (EDInub === 7) {
+                             if (element.파일tPay코드==='0201SPEDIED0011') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("15:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //씨티(0203, I271)
+                         if (EDInub === 8) {
+                             if (element.파일tPay코드==='0100SPEDII271') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("14:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송 - bc_gator 전송 확인")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //하나(0310, SL05)
+                         if (EDInub === 9) {
+                             if (element.파일tPay코드==='0310SPEDISL05') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("13:30")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //삼성(0400, ED0011)
+                         if (EDInub === 10) {
+                             if (element.파일tPay코드==='0400SPEDIED0011') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("14:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //신한(0500, CN0005)
+                         if (EDInub === 11) {
+                             if (element.파일tPay코드==='0500SPEDICN0005') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("14:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //현대(0800, EDIS)
+                         if (EDInub === 12) {
+                             if (element.파일tPay코드==='0800SPEDIEDIS') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("14:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //롯데(0900, ED55)
+                         if (EDInub === 13) {
+                             if (element.파일tPay코드==='0900SPEDIED55') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("16:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+         
+                         //롯데(은련UPUP, ED33)
+                         if (EDInub === 14) {
+                             if (element.파일tPay코드==='0900SPFORED33') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("16:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 EDIData.push(Data)
+                                 EDInub ++
+                             }
+                         }
+                        
+                     });
+                 }
+                 // console.log(EDIData);
+                 document.getElementById('EIDTableBtn').addEventListener('click', createTable);
+                 function createTable() {
+                     // 테이블 데이터
+                     // 테이블 요소 생성
+                     const table = document.createElement('table');
+                     table.border = "1";
+         
+                     // 테이블 헤더 생성
+                     const thead = document.createElement('thead');
+                     const headerRow = document.createElement('tr');
+         
+                     for (let j = 0; j < EDIData[0].length; j++) {
+                         const th = document.createElement('th');
+                         th.textContent = EDIData[0][j];
+                         headerRow.appendChild(th);
+                     }
+         
+                     thead.appendChild(headerRow);
+                     table.appendChild(thead);
+         
+                     // 테이블 본문 생성
+                     const tbody = document.createElement('tbody');
+         
+                     for (let i = 1; i < EDIData.length; i++) {
+                         const row = document.createElement('tr');
+         
+                         for (let j = 0; j < EDIData[i].length; j++) {
+                             const cell = document.createElement('td');
+                             cell.textContent = EDIData[i][j];
+                             row.appendChild(cell);
+                         }
+         
+                         tbody.appendChild(row);
+                     }
+         
+                     table.appendChild(tbody);
+         
+                     // 생성한 테이블을 화면에 추가
+                     const tableContainer = document.getElementById('tableContainer');
+                     tableContainer.innerHTML = '';
+                     tableContainer.appendChild(table);
+                 }
+                
+                 // DDC/DESC 매입청구 자료 전송
+                 const DdcDescData = [["카드사명", "데드라인", "송신시간", "완료시간", "파일크기", "비고"]]
+                 var DDCnub = 1
+                 for (let index = 0; index <= 30; index++) {
+                     result.forEach(element => {
+                            
+                         // 해외비씨(0100, F132)
+                         if (DDCnub ===1) {
+                             if (element.파일tPay코드==='0100SPDDCF132') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("09:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         // 국민DDC (0200, DD00)
+                         if (DDCnub ===2) {
+                             if (element.파일tPay코드==='0200SPDDCDD00') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         // 농협(0201, DD0011)
+                         if (DDCnub === 3) {
+                             if (element.파일tPay코드==='0201SPDDCDD0011') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("08:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }       
+         
+                         //참사랑(0204, DD0011)
+                         if (DDCnub === 4) {
+                             if (element.파일tPay코드==='0204SPDDCDD0011') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("09:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //전북(0303, DD0011)
+                         if (DDCnub === 5) {
+                             if (element.파일tPay코드==='0303SPDDCDD0011') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("11:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //우리(0110, DD55)
+                         if (DDCnub === 6) {
+                             if (element.파일tPay코드==='0110SPDDCDD55') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //우리(0110, DE55)
+                         if (DDCnub === 7) {
+                             if (element.파일tPay코드==='0110SPDSCDE55') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //하나(0310, SL01)
+                         if (DDCnub === 8) {
+                             if (element.파일tPay코드==='0310SPDDCSL01') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //하나(0310, SL07)
+                         if (DDCnub === 9) {
+                             if (element.파일tPay코드==='0310SPDSCSL07') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //삼성(0400, CC0011)
+                         if (DDCnub === 10) {
+                             if (element.파일tPay코드==='0400SPDDCCC0011') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("08:30")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //삼성(0400, ED0022)
+                         if (DDCnub === 11) {
+                             if (element.파일tPay코드==='0400SPDSCED0022') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("08:30")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //신한(0500, CN0002)
+                         if (DDCnub === 12) {
+                             if (element.파일tPay코드==='0500SPDDCCN0002') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //신한(0500, CN0004)
+                         if (DDCnub === 13) {
+                             if (element.파일tPay코드==='0500SPDSCCN0004') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+                        
+                         //현대(0800, EDCS)
+                         if (DDCnub === 14) {
+                             if (element.파일tPay코드==='0800SPDDCEDCS') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("07:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                         //현대(0800, DESS)
+                         if (DDCnub === 15) {
+                             if (element.파일tPay코드==='0800SPDSCDESS') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("07:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                          //롯데(0900, DD55)
+                          if (DDCnub === 16) {
+                             if (element.파일tPay코드==='0900SPDDCDD55') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("09:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                          //롯데(0900, DE55)
+                          if (DDCnub === 17) {
+                             if (element.파일tPay코드==='0900SPDSCDE55') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("09:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 DdcDescData.push(Data)
+                                 DDCnub ++
+                             }
+                         }
+         
+                     });
+                 }
+                 document.getElementById('DDCTableBtn').addEventListener('click', createTableDDC);
+                 function createTableDDC() {
+                     // 테이블 데이터
+                     // 테이블 요소 생성
+                     const table = document.createElement('table');
+                     table.border = "1";
+         
+                     // 테이블 헤더 생성
+                     const thead = document.createElement('thead');
+                     const headerRow = document.createElement('tr');
+         
+                     for (let j = 0; j < DdcDescData[0].length; j++) {
+                         const th = document.createElement('th');
+                         th.textContent = DdcDescData[0][j];
+                         headerRow.appendChild(th);
+                     }
+         
+                     thead.appendChild(headerRow);
+                     table.appendChild(thead);
+         
+                     // 테이블 본문 생성
+                     const tbody = document.createElement('tbody');
+         
+                     for (let i = 1; i < DdcDescData.length; i++) {
+                         const row = document.createElement('tr');
+         
+                         for (let j = 0; j < DdcDescData[i].length; j++) {
+                             const cell = document.createElement('td');
+                             cell.textContent = DdcDescData[i][j];
+                             row.appendChild(cell);
+                         }
+         
+                         tbody.appendChild(row);
+                     }
+         
+                     table.appendChild(tbody);
+         
+                     // 생성한 테이블을 화면에 추가
+                     const tableContainer = document.getElementById('tableContainer');
+                     tableContainer.innerHTML = '';
+                     tableContainer.appendChild(table);
+                 }
+            
+                 // 2차 하위사업자 자료 전송
+                 const C2_data = [["카드사명", "데드라인", "송신시간", "완료시간", "파일크기", "비고"]]
+                 var C2nub = 1
+                 for (let index = 0; index <= 30; index++) {
+                     result.forEach(element => {
+                            
+                         // 비씨(0100, BM190)
+                         if (C2nub ===1) {
+                             if (element.파일tPay코드==='0100SPDIFM190') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송 - bc_gator 전송 확인")
+                                 C2_data.push(Data)
+                                 C2nub ++
+                             }
+                         }
+         
+                         // 우리(0110, PG55)
+                         if (C2nub ===2) {
+                             if (element.파일tPay코드==='0110SPDIFPG55') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C2_data.push(Data)
+                                 C2nub ++
+                             }
+                         }
+         
+                         // 농협(0201, MC0041)
+                         if (C2nub === 3) {
+                             if (element.파일tPay코드==='0201SPDIFMC0041') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("07:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("토요일, 일요일, 공휴일 제외 전송")
+                                 C2_data.push(Data)
+                                 C2nub ++
+                             }
+                         }
+         
+                         //하나(0310, MC20)
+                         if (C2nub === 4) {
+                             if (element.파일tPay코드==='0310SPDIFMC20') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("토요일, 일요일, 공휴일 제외 전송")
+                                 C2_data.push(Data)
+                                 C2nub ++
+                             }
+                         }
+         
+                         //신한(0500, CNPG01)
+                         if (C2nub === 5) {
+                             if (element.파일tPay코드==='0500SPDIFCNPG01') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("12:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("토요일, 일요일, 공휴일 제외 전송")
+                                 C2_data.push(Data)
+                                 C2nub ++
+                             }
+                         }
+         
+                         //현대(0800, MR33)
+                         if (C2nub === 6) {
+                             if (element.파일tPay코드==='0800SPDIFMR33') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("06:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C2_data.push(Data)
+                                 C2nub ++
+                             }
+                         }
+         
+                         //롯데(0900, PG11)
+                         if (C2nub === 7) {
+                             if (element.파일tPay코드==='0900SPDIFPG11') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("07:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C2_data.push(Data)
+                                 C2nub ++
+                             }
+                         }
+                        
+                     });
+                 }
+                 // console.log(C2_data);
+                 document.getElementById('C2TableBtn').addEventListener('click', createTable2C);
+                 function createTable2C() {
+                     // 테이블 데이터
+                     // 테이블 요소 생성
+                     const table = document.createElement('table');
+                     table.border = "1";
+         
+                     // 테이블 헤더 생성
+                     const thead = document.createElement('thead');
+                     const headerRow = document.createElement('tr');
+         
+                     for (let j = 0; j < C2_data[0].length; j++) {
+                         const th = document.createElement('th');
+                         th.textContent = C2_data[0][j];
+                         headerRow.appendChild(th);
+                     }
+         
+                     thead.appendChild(headerRow);
+                     table.appendChild(thead);
+         
+                     // 테이블 본문 생성
+                     const tbody = document.createElement('tbody');
+         
+                     for (let i = 1; i < C2_data.length; i++) {
+                         const row = document.createElement('tr');
+         
+                         for (let j = 0; j < C2_data[i].length; j++) {
+                             const cell = document.createElement('td');
+                             cell.textContent = C2_data[i][j];
+                             row.appendChild(cell);
+                         }
+         
+                         tbody.appendChild(row);
+                     }
+         
+                     table.appendChild(tbody);
+         
+                     // 생성한 테이블을 화면에 추가
+                     const tableContainer = document.getElementById('tableContainer');
+                     tableContainer.innerHTML = '';
+                     tableContainer.appendChild(table);
+                 }
+            
+                 // 차액정산 자료 전송
+                 const C_data = [["카드사명", "데드라인", "송신시간", "완료시간", "파일크기", "비고"]]
+                 var Cnub = 1
+                 for (let index = 0; index <= 30; index++) {
+                     result.forEach(element => {
+                            
+                         // 비씨(0100, BF113)
+                         if (Cnub ===1) {
+                             if (element.파일tPay코드==='0100SPDIFF113') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("10:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송 - bc_gator 전송 확인")
+                                 C_data.push(Data)
+                                 Cnub ++
+                             }
+                         }
+         
+                         // 우리(0110, PG00)
+                         if (Cnub ===2) {
+                             if (element.파일tPay코드==='0110SPDIFPG00') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("11:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C_data.push(Data)
+                                 Cnub ++
+                             }
+                         }
+         
+                         // 국민(0200, PG00)
+                         if (Cnub === 3) {
+                             if (element.파일tPay코드==='0200SPDIFPG00') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("11:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C_data.push(Data)
+                                 Cnub ++
+                             }
+                         }
+         
+                         //농협(0201, AJ0011)
+                         if (Cnub === 4) {
+                             if (element.파일tPay코드==='0201SPDIFAJ0011') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("13:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C_data.push(Data)
+                                 Cnub ++
+                             }
+                         }
+         
+                         //하나(0310, SL19)
+                         if (Cnub === 5) {
+                             if (element.파일tPay코드==='0310SPDIFSL19') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("12:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C_data.push(Data)
+                                 Cnub ++
+                             }
+                         }
+         
+                         //삼성(0400, DA0011)
+                         if (Cnub === 6) {
+                             if (element.파일tPay코드==='0400SPDIFDA0011') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("11:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C_data.push(Data)
+                                 Cnub ++
+                             }
+                         }
+         
+                         //신한(0500, CN0010)
+                         if (Cnub === 7) {
+                             if (element.파일tPay코드==='0500SPDIFCN0010') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("09:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C_data.push(Data)
+                                 Cnub ++
+                             }
+                         }
+         
+                         //현대(0800, PS00)
+                         if (Cnub === 8) {
+                             if (element.파일tPay코드==='0800SPDIFPS00') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("11:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C_data.push(Data)
+                                 Cnub ++
+                             }
+                         }
+         
+                         //롯데(0900, PG01)
+                         if (Cnub === 9) {
+                             if (element.파일tPay코드==='0900SPDIFPG01') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("12:00")
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push(`${element.파일크기}`)
+                                 Data.push("365전송")
+                                 C_data.push(Data)
+                                 Cnub ++
+                             }
+                         }
+                        
+                     });
+                 }
+                 // console.log(C_data);
+                 document.getElementById('CTableBtn').addEventListener('click', createTableC);
+                 function createTableC() {
+                     // 테이블 데이터
+                     // 테이블 요소 생성
+                     const table = document.createElement('table');
+                     table.border = "1";
+         
+                     // 테이블 헤더 생성
+                     const thead = document.createElement('thead');
+                     const headerRow = document.createElement('tr');
+         
+                     for (let j = 0; j < C_data[0].length; j++) {
+                         const th = document.createElement('th');
+                         th.textContent = C_data[0][j];
+                         headerRow.appendChild(th);
+                     }
+         
+                     thead.appendChild(headerRow);
+                     table.appendChild(thead);
+         
+                     // 테이블 본문 생성
+                     const tbody = document.createElement('tbody');
+         
+                     for (let i = 1; i < C_data.length; i++) {
+                         const row = document.createElement('tr');
+         
+                         for (let j = 0; j < C_data[i].length; j++) {
+                             const cell = document.createElement('td');
+                             cell.textContent = C_data[i][j];
+                             row.appendChild(cell);
+                         }
+         
+                         tbody.appendChild(row);
+                     }
+         
+                     table.appendChild(tbody);
+         
+                     // 생성한 테이블을 화면에 추가
+                     const tableContainer = document.getElementById('tableContainer');
+                     tableContainer.innerHTML = '';
+                     tableContainer.appendChild(table);
+                 }
+         
+         
+         
+                 // 직불 및 거래내역 전송
+                 const J_sand_data = [["카드사명", "전송시간", "완료시간", "비고"]]
+                 var Jnub = 1
+                 for (let index = 0; index <= 30; index++) {
+                     result.forEach(element => {
+                            
+                         // 직불자료(auth,2100)
+                         if (Jnub === 1) {
+                             var Data = []
+                                 Data.push(`직불자료(auth,2100)`)
+                                 Data.push(`업무종료`)
+                                 Data.push(`업무종료`)
+                                 Data.push("업무종료")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                         }
+         
+                         // 신한[대행승인] (CN0001,0500)
+                         if (Jnub === 2) {
+                             if (element.파일tPay코드==='0500STSIPCN0001') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("토,일 미전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         // 국민(KM99, 0200)
+                         if (Jnub === 3) {
+                             if (element.파일tPay코드==='0200SESLPKM99') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("토,일 미전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //한페이스(UC10, 3036)
+                         if (Jnub === 4) {
+                             if (element.파일tPay코드==='3036STAUTUC10') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //비씨(대행거절내역, M140)
+                         if (Jnub === 5) {
+                             if (element.파일tPay코드==='0100SEREJM140') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //비씨(신규단말, M110)
+                         if (Jnub === 6) {
+                             if (element.파일tPay코드==='0100SMCATM110') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("공휴일 미전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //비씨(M130)
+                         if (Jnub === 7) {
+                             if (element.파일tPay코드==='0100RMMERM130') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("일, 월 미전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //비씨(H011)
+                         if (Jnub === 8) {
+                             if (element.파일tPay코드==='0100RMMERH011') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("일, 월 미전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //온누리(OC90, 3042)
+                         if (Jnub === 9) {
+                             if (element.파일tPay코드==='3049RMMEROC90') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("이제 안들어옴")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //현금IC (VN03, 3042)
+                         if (Jnub === 10) {
+                             if (element.파일tPay코드==='3049RMMERVN03') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 수신")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         // 빈칸
+                         if (Jnub === 11) {
+                                 var Data = []
+                                 Data.push(``)
+                                 Data.push(``)
+                                 Data.push(``)
+                                 Data.push("")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                         }
+         
+                         //현금영수증(TSI, 5000)
+                         if (Jnub === 12) {
+                             if (element.파일tPay코드==='5000SPAUTTSI') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송 (반드시 2시 이전 전송 완료해야 함)")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //현금영수증(CSI, 5000)
+                         if (Jnub === 13) {
+                             if (element.파일tPay코드==='5000SFCATCSI') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송 (반드시 2시 이전 전송 완료해야 함)")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //현금영수증(RSI, 5000)
+                         if (Jnub === 14) {
+                             if (element.파일tPay코드==='5000SFCATRSI') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송 (반드시 2시 이전 전송 완료해야 함)")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //현금영수증(DLI, 5100)
+                         if (Jnub === 15) {
+                             if (element.파일tPay코드==='5000SPPAYDLI') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송 (반드시 2시 이전 전송 완료해야 함)")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //현금영수증(MSI, 5000)
+                         if (Jnub === 16) {
+                             if (element.파일tPay코드==='5000SPAUTMSI') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("월1회 / 매월 마지막 일요일 다음날 전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //하나카드(미매입, MC05, 0310)
+                         if (Jnub === 17) {
+                             if (element.파일tPay코드==='0310SMCATMC05') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //현금IC 자료 수신 (VN01, 3042)
+                         if (Jnub === 18) {
+                             if (element.파일tPay코드==='3049RTAUTVN01') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //현금IC 자료 수신 (VN02, 3042)
+                         if (Jnub === 19) {
+                             if (element.파일tPay코드==='3049RTAUTVN02') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //삼성카드(변동분, CC0088, 0400)
+                         if (Jnub === 20) {
+                             if (element.파일tPay코드==='0400SMMERCC0088') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("토, 일 미전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+         
+                         //롯데카드(변동분, ME55, 0900)
+                         if (Jnub === 21) {
+                             if (element.파일tPay코드==='0900SMMERME55') {
+                                 var Data = []
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push(`${element.시작시간}`)
+                                 Data.push(`${element.완료시간}`)
+                                 Data.push("365 전송")
+                                 J_sand_data.push(Data)
+                                 Jnub ++
+                             }
+                         }
+                        
+                     });
+                 }
+                 // console.log(J_sand_data);
+                 document.getElementById('JJTableBtn').addEventListener('click', createTableJ);
+                 function createTableJ() {
+                     // 테이블 데이터
+                     // 테이블 요소 생성
+                     const table = document.createElement('table');
+                     table.border = "1";
+         
+                     // 테이블 헤더 생성
+                     const thead = document.createElement('thead');
+                     const headerRow = document.createElement('tr');
+         
+                     for (let j = 0; j < J_sand_data[0].length; j++) {
+                         const th = document.createElement('th');
+                         th.textContent = J_sand_data[0][j];
+                         headerRow.appendChild(th);
+                     }
+         
+                     thead.appendChild(headerRow);
+                     table.appendChild(thead);
+         
+                     // 테이블 본문 생성
+                     const tbody = document.createElement('tbody');
+         
+                     for (let i = 1; i < J_sand_data.length; i++) {
+                         const row = document.createElement('tr');
+         
+                         for (let j = 0; j < J_sand_data[i].length; j++) {
+                             const cell = document.createElement('td');
+                             cell.textContent = J_sand_data[i][j];
+                             row.appendChild(cell);
+                         }
+         
+                         tbody.appendChild(row);
+                     }
+         
+                     table.appendChild(tbody);
+         
+                     // 생성한 테이블을 화면에 추가
+                     const tableContainer = document.getElementById('tableContainer');
+                     tableContainer.innerHTML = '';
+                     tableContainer.appendChild(table);
+                 }
+         
+                 // DDC개시/해지/해외카드/BL cheek
+                 const Cheek_data = [["작업내용", "카드사명", "전송일", "송/수신 체크", "비고"]]
+                 var Cheeknub = 1
+                 for (let index = 0; index <= 30; index++) {
+                     result.forEach(element => {
+                            
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [국민(200) 토, 일 미전송]
+                         if (Cheeknub ===1) {
+                             if (element.파일tPay코드==='0200SFDDCDM00') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [농협(201) 토, 일 미전송]
+                         if (Cheeknub ===2) {
+                             if (element.파일tPay코드==='0201SFDDCMC0021') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [전북 0303(VM11) 토, 일 미전송]
+                         if (Cheeknub ===3) {
+                             if (element.파일tPay코드==='0303SFDDCVM1121') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [전북 0303(VF44) 토, 일 미전송]
+                         if (Cheeknub ===4) {
+                             if (element.파일tPay코드==='0303STAUTVF4411') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [하나 0310 토, 일 미전송]
+                         if (Cheeknub ===5) {
+                             if (element.파일tPay코드==='0310SFDDCMC01') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [삼성 0400 토, 일 미전송]
+                         if (Cheeknub ===6) {
+                             if (element.파일tPay코드==='0400SFDDCCC0066') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [신한 0500 토, 일 미전송]
+                         if (Cheeknub ===7) {
+                             if (element.파일tPay코드==='0500SFDDCCN0012') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [현대 0800 토, 일 미전송]
+                         if (Cheeknub ===8) {
+                             if (element.파일tPay코드==='0800SFDDCMR22') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [롯데 0900 토, 일 미전송]
+                         if (Cheeknub ===9) {
+                             if (element.파일tPay코드==='0900SFDDCKQ11') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 가맹점 DDC 개시 / 해지 데이터 전송 [비씨 0100(M170) 토, 일 미전송]
+                         if (Cheeknub ===10) {
+                             if (element.파일tPay코드==='0100SFESCM170') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`가맹점 DDC 개시 / 해지 데이터 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("토, 일 미전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 빈칸
+                         if (Cheeknub === 11) {
+                             var Data = []
+                             Data.push(``)
+                             Data.push(``)
+                             Data.push(``)
+                             Data.push("")
+                             Data.push("")
+                             Cheek_data.push(Data)
+                             Cheeknub ++
+                         }
+         
+                         // 해외카드 승인자료 전송 [국민 0200 365 전송]
+                         if (Cheeknub ===12) {
+                             if (element.파일tPay코드==='0200STFOROV10') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`해외카드 승인자료 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("365 전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 해외카드 승인자료 전송 [농협 0201 365 전송]
+                         if (Cheeknub ===13) {
+                             if (element.파일tPay코드==='0201STFORNHFA01') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`해외카드 승인자료 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("365 전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 해외카드 승인자료 전송 [하나 0310 365 전송]
+                         if (Cheeknub ===14) {
+                             if (element.파일tPay코드==='0310STFORFEDD') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`해외카드 승인자료 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("365 전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 해외카드 승인자료 전송 [신한 0500 365 전송]
+                         if (Cheeknub ===15) {
+                             if (element.파일tPay코드==='0500STFOR980025') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`해외카드 승인자료 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("365 전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 해외카드 승인자료 전송 [현대 0800 365 전송]
+                         if (Cheeknub ===16) {
+                             if (element.파일tPay코드==='0800STFORACQF') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`해외카드 승인자료 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("365 전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 해외카드 승인자료 전송 [롯데 0900 365 전송]
+                         if (Cheeknub ===17) {
+                             if (element.파일tPay코드==='0900STFORVS11') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`해외카드 승인자료 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("365 전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 해외카드 승인자료 전송 [비씨 0100 365 전송]
+                         if (Cheeknub ===18) {
+                             if (element.파일tPay코드==='0100STFORF150') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`해외카드 승인자료 전송`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("365 전송")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // 빈칸
+                         if (Cheeknub === 19) {
+                             var Data = []
+                             Data.push(``)
+                             Data.push(``)
+                             Data.push(``)
+                             Data.push("")
+                             Data.push("")
+                             Cheek_data.push(Data)
+                             Cheeknub ++
+                         }
+                        
+                         // BL 자료 수신 [비씨 0100 L104]
+                         if (Cheeknub ===20) {
+                             if (element.파일tPay코드==='0100REBLOL104') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`BL 자료 수신`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // BL 자료 수신 [국민 0200 KMBL]
+                         if (Cheeknub ===21) {
+                             if (element.파일tPay코드==='0200REBLOKMBL') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`BL 자료 수신`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // BL 자료 수신 [농협 0201 BL0011]
+                         if (Cheeknub ===22) {
+                             if (element.파일tPay코드==='0201REBLOBL0011') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`BL 자료 수신`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // BL 자료 수신 [하나 0310 JCDD]
+                         if (Cheeknub ===23) {
+                             if (element.파일tPay코드==='0310RESIPJCDD') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`BL 자료 수신`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // BL 자료 수신 [하나 0310 JBDD]
+                         if (Cheeknub ===24) {
+                             if (element.파일tPay코드==='0310REBLOJBDD') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`BL 자료 수신`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // BL 자료 수신 [신한 0500 CN0008]
+                         if (Cheeknub ===25) {
+                             if (element.파일tPay코드==='0500REBLOCN0008') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`BL 자료 수신`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // BL 자료 수신 [현대 0800 BLIF]
+                         if (Cheeknub ===26) {
+                             if (element.파일tPay코드==='0800REBLOBLIF') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`BL 자료 수신`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // BL 자료 수신 [롯데 0900 C4BL]
+                         if (Cheeknub ===27) {
+                             if (element.파일tPay코드==='0900RCBLOC4BL') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`BL 자료 수신`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                         // BL 자료 수신 [국세청 5000 BLO]
+                         if (Cheeknub ===28) {
+                             if (element.파일tPay코드==='5000REBLOBLO') {
+                                 var Data = []
+                                 // console.log(element);
+                                 Data.push(`BL 자료 수신`)
+                                 Data.push(`${element.기관} ${element.파일코드}`)
+                                 Data.push("")
+                                 if (element.완료시간) {
+                                     Data.push('O')
+                                 } else {Data.push('X')}
+                                 Data.push("")
+                                 Cheek_data.push(Data)
+                                 Cheeknub ++
+                             }
+                         }
+         
+                     });
+                 }
+                 // console.log(Cheek_data);
+                 document.getElementById('CheekTableBtn').addEventListener('click', createTableCheek);
+                 function createTableCheek() {
+                     // 테이블 데이터
+                     // 테이블 요소 생성
+                     const table = document.createElement('table');
+                     table.border = "1";
+         
+                     // 테이블 헤더 생성
+                     const thead = document.createElement('thead');
+                     const headerRow = document.createElement('tr');
+         
+                     for (let j = 0; j < Cheek_data[0].length; j++) {
+                         const th = document.createElement('th');
+                         th.textContent = Cheek_data[0][j];
+                         headerRow.appendChild(th);
+                     }
+         
+                     thead.appendChild(headerRow);
+                     table.appendChild(thead);
+         
+                     // 테이블 본문 생성
+                     const tbody = document.createElement('tbody');
+         
+                     for (let i = 1; i < Cheek_data.length; i++) {
+                         const row = document.createElement('tr');
+         
+                         for (let j = 0; j < Cheek_data[i].length; j++) {
+                             const cell = document.createElement('td');
+                             cell.textContent = Cheek_data[i][j];
+                             row.appendChild(cell);
+                         }
+         
+                         tbody.appendChild(row);
+                     }
+         
+                     table.appendChild(tbody);
+         
+                     // 생성한 테이블을 화면에 추가
+                     const tableContainer = document.getElementById('tableContainer');
+                     tableContainer.innerHTML = '';
+                     tableContainer.appendChild(table);
+                 }
+         
+         
+         
+                 // 버튼함수 끝
+             })
+            
+            
+            
+             </script>
+         </body>
+         </html>

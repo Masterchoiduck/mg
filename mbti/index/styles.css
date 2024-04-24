@@ -1,38 +1,77 @@
 /* styles.css */
 
+/* 모달 */
+                    
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .npc {
     display: flex;
     gap: 35px;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
+    justify-content: flex-end;
 }
 
 .player {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
 }
 
 .profile-name {
+    font-family: "Nanum Gothic", sans-serif;
     text-align: center;
     font-size: 1.5em; /* 이름 글자 크기 조정 */
     margin-top: 0px;
     color: #fff;
 }
 
+/* 폰트 / font*/
 .nanum-pen-script-regular {
     font-family: "Nanum Pen Script", cursive;
     font-weight: 400;
     font-style: normal;
   }
 
+.nanum-gothic-regular {
+font-family: "Nanum Gothic", sans-serif;
+font-weight: 400;
+font-style: normal;
+}
+
+@font-face {
+    font-family: 'TTLaundryGothicB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403-2@1.0/TTLaundryGothicB.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+  
+
 body, html {
     background-color: black;
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: 'Nanum Pen Script'
+    font-family: 'TTLaundryGothicB'
 }
 
 
@@ -83,7 +122,7 @@ body, html {
 }
 
 .texts {
-    margin-top: 20px; /* 프로필 사진 위로 공간 확보 */
+    /* margin-top: 20px; 프로필 사진 위로 공간 확보 */
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -92,7 +131,7 @@ body, html {
 .question, .reply {
     background-color: #fff;
     border-radius: 10px;
-    padding: 10px;
+    padding: 13px;
     margin-bottom: 10px;
     display: inline-block; 
     position: relative;
@@ -116,12 +155,13 @@ body, html {
     border-style: solid;
     border-color: #ffff transparent transparent #ffff;
     bottom: -6px;
-    left: 5%;
+    left: 95%;
     transform: translateX(-50%) rotate(45deg);
 }
 
 
 .reply {
+    text-align: left;
     font-size: 1.3em;
 }
 
@@ -129,9 +169,10 @@ body, html {
 @media (min-width: 768px) {
 
     .profile-name {
+
         text-align: center;
-        font-size: 2em; /* 이름 글자 크기 조정 */
-        margin-top: 5px;
+        font-weight: 800;
+        font-size: 1.7em; /* 이름 글자 크기 조정 */
         color: #fff;
     }
 
@@ -147,7 +188,7 @@ body, html {
     .reply {
         cursor: pointer;
         transition: background-color 0.3s;
-        font-size: 2.3em;
+        font-size: 1.3em;
     }
     
     .reply:hover {
@@ -158,7 +199,7 @@ body, html {
         margin-top: -5%;
         position: relative; /* 부모 요소에 상대적인 위치 지정 */
         z-index: 2;
-        font-size: 2.3em;
+        font-size: 1.3em;
         height: 100%;
         font-weight: bold;
     }
@@ -170,8 +211,8 @@ body, html {
         border-width: 15px;
         border-style: solid;
         border-color: #ffff transparent transparent #ffff;
-        bottom: 4px;
-        left: 0%;
+        bottom: -8px;
+        left: 95%;
         transform: translateX(-50%) rotate(45deg);
     }
 

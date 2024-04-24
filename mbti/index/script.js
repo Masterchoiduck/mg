@@ -5,6 +5,24 @@ document.querySelectorAll('.reply').forEach(reply => {
     });
 });
 
+// 모달을 보이도록 설정
+document.querySelector('.profile-pic').addEventListener('click', function () {
+    document.getElementById('myModal1').style.display = 'flex';
+});
+
+// 닫기 버튼 클릭 시 모달을 닫음
+document.getElementById('closeModal1').addEventListener('click', function () {
+    document.getElementById('myModal1').style.display = 'none';
+});
+
+
+// 모달 외부 클릭 시 모달을 닫음
+window.addEventListener('click', function (event) {
+    var modal = document.getElementById('myModal1');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+});
 
 var viewportWidth = window.innerWidth;
 
