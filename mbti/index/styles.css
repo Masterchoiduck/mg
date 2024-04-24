@@ -169,6 +169,10 @@ body, html {
 
 @media (min-width: 768px) {
 
+    .container > *{
+        flex: 0;
+    }
+
     .profile-name {
 
         text-align: center;
@@ -231,7 +235,8 @@ body, html {
     }
 
     .character-image {
-        /* width: 50%; */
+        position: relative; /* 메시지 버블이 겹치기 위해 */
+        width: auto;
     }
 
     .message-bubble {
@@ -255,24 +260,36 @@ body, html {
         align-items: flex-start; /* 상단 정렬 */
     }
 
-    .character-image {
-        position: relative; /* 메시지 버블이 겹치기 위해 */
-    }
 
 
     .message-bubble {
         position: absolute; /* 이미지 위에 오도록 절대 위치 설정 */
         bottom: 20%; /* 이미지 하단으로부터의 위치 */
-        right: 5%; /* 오른쪽 정렬 */
+        right: 15%; /* 오른쪽 정렬 */
         
         margin-left: 0; /* 이전 설정 초기화 */
     }
+    
+}
 
-    .profile-pic img {
-        /* top: -20px; */
-        /* left: 50%; */
-        /* transform: translateX(-50%); 중앙 정렬을 위해 */
+/* 768~1631 */
+@media (min-width: 1410px) and (max-width: 1631px) {
+        .message-bubble {
+            position: absolute; /* 이미지 위에 오도록 절대 위치 설정 */
+            bottom: 20%; /* 이미지 하단으로부터의 위치 */
+            right: 3%; /* 오른쪽 정렬 */
+            margin-left: 0; /* 이전 설정 초기화 */
+        }
     }
 
-    /* 나머지 스타일은 그대로 유지합니다. */
+    /* 768~1631 */
+@media (min-width: 768px) and (max-width: 1410px) {
+    .message-bubble {
+        position: absolute; /* 이미지 위에 오도록 절대 위치 설정 */
+        bottom: 20%; /* 이미지 하단으로부터의 위치 */
+        right: 1%; /* 오른쪽 정렬 */
+        margin-left: 0; /* 이전 설정 초기화 */
+    }
 }
+
+/* 나머지 스타일은 그대로 유지합니다. */
