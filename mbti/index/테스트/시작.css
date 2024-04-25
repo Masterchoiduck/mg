@@ -1,0 +1,68 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .main-container {
+    height: 100vh;
+    background: url('./이미지/배경.png') no-repeat center center fixed; 
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    color: white;
+  }
+  
+  .title {
+    font-size: 2.5em;
+    margin-top: 20px;
+  }
+  
+  .icon-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .gender-icon {
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  #male {
+    background: url('./이미지/남성.png') no-repeat center center;
+    background-size: contain;
+  }
+  
+  #female {
+    background: url('./이미지/여성.png') no-repeat center center;
+    background-size: contain;
+  }
+  
+  .gender-text {
+    position: absolute;
+    font-size: 1em;
+  }
+  
+  .button-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .test-button{
+    padding: 10px 20px;
+    margin: 10px 0;
+    background: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-size: 1.2em;
+    border: none;
+  }
+  
+  
